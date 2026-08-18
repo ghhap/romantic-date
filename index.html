@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Для тебя ❤️</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      font-family: Arial, sans-serif;
+
+      background:
+        radial-gradient(circle at top, #ffcad9, transparent 45%),
+        linear-gradient(160deg, #fff0f5, #ffdce7);
+
+      overflow: hidden;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+
+      padding: 38px 24px;
+
+      background: rgba(255,255,255,.82);
+
+      border-radius: 30px;
+
+      text-align: center;
+
+      box-shadow:
+        0 20px 60px rgba(136, 41, 76, .20);
+
+      backdrop-filter: blur(15px);
+
+      animation: appear .8s ease;
+    }
+
+    .heart {
+      font-size: 70px;
+      margin-bottom: 15px;
+
+      animation: pulse 1.5s infinite;
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #8c3152;
+
+      margin: 0 0 18px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+
+      color: #654853;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+
+      gap: 12px;
+
+      margin-top: 30px;
+    }
+
+    button {
+      width: 100%;
+
+      padding: 16px;
+
+      border: none;
+      border-radius: 30px;
+
+      font-size: 17px;
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    #yes {
+      color: white;
+      background: linear-gradient(
+        135deg,
+        #e85082,
+        #c52f61
+      );
+
+      box-shadow:
+        0 10px 25px rgba(210, 50, 100, .30);
+    }
+
+    #details {
+      background: white;
+      color: #ad3d64;
+
+      border: 1px solid #efb5c8;
+    }
+
+    #result {
+      display: none;
+    }
+
+    .big-heart {
+      font-size: 100px;
+
+      animation: pulse 1s infinite;
+    }
+
+    .date {
+      margin-top: 25px;
+
+      padding: 18px;
+
+      border-radius: 18px;
+
+      background: #fff2f6;
+
+      color: #8c3152;
+
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .floating-heart {
+      position: fixed;
+      bottom: -50px;
+
+      pointer-events: none;
+
+      animation: fly 5s linear forwards;
+    }
+
+    @keyframes pulse {
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fly {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <div id="question">
+
+    <div class="heart">❤️</div>
+
+    <h1>У меня к тебе один вопросик</h1>
+
+    <p>
+      
+    </p>
+
+    <h1>
+      Пойдёшь со мной на свидание? Моя тигрица  🐯🌹
+    </h1>
+
+    <div class="buttons">
+
+      <button id="yes">
+        Конечно ❤️
+      </button>
+
+      <button id="details">
+        Нет😒
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div id="result">
+
+    <div class="big-heart">
+      ❤️
+    </div>
+
+    <h1>
+      Вот и порешали
+    </h1>
+
+    <p>
+      Я постараюсь что бы мы провели хорошо время вместе 
+    </p>
+
+    <div class="date">
+
+      📅 22 августа
+
+      <br>
+
+      🕖 09:00
+
+      <br>
+
+      Жду возле Республики😉
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  const tg = window.Telegram?.WebApp;
+
+  if (tg) {
+    tg.ready();
+    tg.expand();
+  }
+
+
+  const question =
+    document.getElementById("question");
+
+  const result =
+    document.getElementById("result");
+
+  const yes =
+    document.getElementById("yes");
+
+  const details =
+    document.getElementById("details");
+
+
+  details.addEventListener("click", () => {
+
+    details.innerHTML =
+      "А по попе?)";
+
+  });
+
+
+  yes.addEventListener("click", () => {
+
+    question.style.display = "none";
+
+    result.style.display = "block";
+
+    createHearts();
+
+    if (tg) {
+
+      tg.sendData(
+        JSON.stringify({
+          answer: "yes"
+        })
+      );
+
+    }
+
+  });
+
+
+  function createHearts() {
+
+    for (let i = 0; i < 35; i++) {
+
+      setTimeout(() => {
+
+        const heart =
+          document.createElement("div");
+
+        heart.className =
+          "floating-heart";
+
+        heart.textContent =
+          ["❤️","💕","💗","💖"][
+            Math.floor(Math.random() * 4)
+          ];
+
+        heart.style.left =
+          Math.random() * 100 + "vw";
+
+        heart.style.fontSize =
+          18 + Math.random() * 30 + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(
+          () => heart.remove(),
+          5000
+        );
+
+      }, i * 80);
+
+    }
+
+  }
+
+</script>
+
+</body>
+</html>
